@@ -13,9 +13,11 @@ COPY . /var/www/html/wp-content/themes/halal-shop-pro/
 RUN chown -R www-data:www-data /var/www/html/wp-content/themes/halal-shop-pro \
     && chmod -R 755 /var/www/html/wp-content/themes/halal-shop-pro
 
-# Fix MPM conflict: disable event/worker, keep prefork, then enable rewrite
-RUN a2dismod mpm_event mpm_worker 2>/dev/null || true \
-    && a2enmod mpm_prefork rewrite
+# Fix MPM conflict: delete every mpm_* symlink, then wire up only prefork + rewrite
+RUN find /etc/apache2/mods-enabled/ -name "mpm_*" -delete \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
+    && a2enmod rewrite
 
 # Custom PHP settings for WooCommerce
 RUN echo "upload_max_filesize = 64M\n\
