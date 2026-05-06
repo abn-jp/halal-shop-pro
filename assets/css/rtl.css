@@ -1,0 +1,105 @@
+/* ============================================
+   HALAL SHOP PRO — RTL OVERRIDES (Arabic)
+   ============================================ */
+
+body,
+.site-header,
+.main-navigation,
+.hero-content,
+.product-card__body,
+.footer-top {
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  font-family: 'Noto Sans Arabic', 'Noto Sans JP', sans-serif;
+}
+
+/* Header */
+.header-inner { direction: rtl; }
+.header-search .search-form::before { left: auto; right: .875rem; }
+.header-search input[type="search"] { padding: .625rem 2.75rem .625rem 1rem; }
+.language-switcher__dropdown { right: auto; left: 0; }
+
+/* Navigation */
+.main-nav { flex-direction: row-reverse; }
+.main-nav > li ul { left: auto; right: 0; }
+.main-nav > li ul li a:hover { padding-left: 1.25rem; padding-right: 1.5rem; }
+
+/* Mobile Menu */
+.mobile-menu { left: auto; right: -300px; transition: right var(--trans-base); }
+.mobile-menu.open { right: 0; left: auto; }
+.mobile-nav a:hover { padding-left: 1.5rem; padding-right: calc(1.5rem + 4px); }
+
+/* Hero */
+.hero-inner { direction: rtl; }
+.hero-actions { flex-direction: row-reverse; }
+.hero-stats { flex-direction: row-reverse; }
+
+/* Product Cards */
+.product-card__badges { left: auto; right: .5rem; }
+.product-card__actions { right: auto; left: .5rem; transform: translateX(-10px); }
+.product-card:hover .product-card__actions { transform: translateX(0); }
+.product-card__footer { flex-direction: row-reverse; }
+
+/* Halal Info */
+.halal-info__content .section-title { text-align: right; }
+.halal-info__content .section-title::after { margin-left: auto; margin-right: 0; }
+.halal-cert-badge { left: auto; right: -20px; border-left: none; border-right: 4px solid var(--color-primary); }
+.halal-feature-item { flex-direction: row-reverse; }
+
+/* Footer */
+.footer-links a { flex-direction: row-reverse; }
+.footer-links a::before { content: '‹'; }
+.footer-contact-item { flex-direction: row-reverse; }
+.footer-grid { direction: rtl; }
+
+/* Testimonial */
+.testimonial-card::before { right: auto; left: 1.5rem; }
+.testimonial-author { flex-direction: row-reverse; }
+
+/* Cart Drawer */
+.cart-drawer { right: auto; left: -400px; transition: left var(--trans-base); }
+.cart-drawer.open { left: 0; right: auto; }
+.cart-item { flex-direction: row-reverse; }
+
+/* Back to Top */
+.back-to-top { right: auto; left: 2rem; }
+
+/* Forms */
+.form-label { text-align: right; }
+.form-control { text-align: right; }
+
+/* Buttons */
+.btn { flex-direction: row-reverse; }
+
+/* WooCommerce */
+.woocommerce-breadcrumb { direction: rtl; text-align: right; }
+.woocommerce div.product { direction: rtl; }
+.woocommerce form .form-row { direction: rtl; }
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea { text-align: right; }
+.woocommerce div.product .woocommerce-product-gallery { float: left; }
+.woocommerce div.product div.summary { float: right; }
+
+/* Halal Cert Table */
+.halal-cert-table th,
+.halal-cert-table td { text-align: right; }
+
+/* FAQ */
+.faq-question { flex-direction: row-reverse; }
+
+/* Page Hero */
+.page-hero { direction: rtl; }
+
+/* Typography adjustments */
+p, li, td, th, label, span, div { direction: inherit; }
+
+@media(max-width:768px){
+  .mobile-menu { right: -300px; left: auto; }
+  .mobile-menu.open { right: 0; }
+  .cart-drawer { left: -100%; right: auto; }
+  .cart-drawer.open { left: 0; }
+  .back-to-top { left: 1rem; right: auto; }
+}
