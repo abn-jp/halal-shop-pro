@@ -1,0 +1,9 @@
+# Don't copy these into the theme directory during COPY .
+.git
+.gitignore
+docker-compose.yml
+docker-entrypoint-wrapper.sh
+Dockerfile
+railway.json
+SETUP-GUIDE.md
+node_modules
