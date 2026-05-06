@@ -13,8 +13,9 @@ COPY . /var/www/html/wp-content/themes/halal-shop-pro/
 RUN chown -R www-data:www-data /var/www/html/wp-content/themes/halal-shop-pro \
     && chmod -R 755 /var/www/html/wp-content/themes/halal-shop-pro
 
-# Enable Apache mod_rewrite (required for WordPress permalinks)
-RUN a2enmod rewrite
+# Fix MPM conflict: disable event/worker, keep prefork, then enable rewrite
+RUN a2dismod mpm_event mpm_worker 2>/dev/null || true \
+    && a2enmod mpm_prefork rewrite
 
 # Custom PHP settings for WooCommerce
 RUN echo "upload_max_filesize = 64M\n\
