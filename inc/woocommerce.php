@@ -63,6 +63,7 @@ add_action( 'woocommerce_before_checkout_form', 'halal_shop_shipping_notice' );
 // Product category icons mapping
 function halal_shop_category_icon( $cat_slug ) {
     $icons = [
+        'wagyu'       => '🥩',
         'meat'        => '🥩',
         'poultry'     => '🍗',
         'seafood'     => '🐟',

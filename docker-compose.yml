@@ -1,7 +1,11 @@
 version: '3.8'
 
 # Local development stack — mirrors Railway production environment
-# Usage: docker compose up -d
+#
+# Usage:
+#   docker compose up -d                  ← start the site
+#   docker compose run --rm setup         ← install Polylang + configure languages
+#   docker compose down                   ← stop everything
 
 services:
 
@@ -17,6 +21,7 @@ services:
       WORDPRESS_TABLE_PREFIX: wp_
       WORDPRESS_DEBUG: 0
     volumes:
+      - wp_core:/var/www/html              # full WP filesystem (shared with setup service)
       - wp_uploads:/var/www/html/wp-content/uploads
       - wp_plugins:/var/www/html/wp-content/plugins
     depends_on:
@@ -24,23 +29,6 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
-      MYSQL_USER: ${MYSQL_USER:-wordpress}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-volumes:
-  db_data:
-  wp_uploads:
-  wp_plugins:
+  # ── One-shot multilingual setup service ───────────────────────────────────
+  # Run:  docker compose run --rm setup
+  # This installs WP-CLI inside t

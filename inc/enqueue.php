@@ -68,6 +68,26 @@ function halal_shop_enqueue_scripts() {
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
+
+    // Wagyu category assets — loaded only on halal-wagyu/* pages
+    if ( is_tax( 'product_cat' ) ) {
+        $term = get_queried_object();
+        if ( $term && strpos( $term->slug, 'halal-wagyu' ) !== false ) {
+            wp_enqueue_style(
+                'halal-shop-wagyu',
+                HALAL_SHOP_URI . '/assets/css/wagyu.css',
+                [ 'halal-shop-main' ],
+                HALAL_SHOP_VERSION
+            );
+            wp_enqueue_script(
+                'halal-shop-wagyu',
+                HALAL_SHOP_URI . '/assets/js/wagyu.js',
+                [ 'jquery', 'halal-shop-main' ],
+                HALAL_SHOP_VERSION,
+                true
+            );
+        }
+    }
 }
 add_action( 'wp_enqueue_scripts', 'halal_shop_enqueue_scripts' );
 
