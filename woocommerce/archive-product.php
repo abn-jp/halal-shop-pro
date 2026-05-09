@@ -61,7 +61,7 @@ get_header( 'shop' );
                 </div>
                 <?php woocommerce_after_shop_loop(); ?>
                 <?php else : ?>
-                <?php woocommerce_no_products_found(); ?>
+                <?php do_action( 'woocommerce_no_products_found' ); wc_get_template( 'loop/no-products-found.php' ); ?>
                 <?php endif; ?>
             </div>
 
