@@ -117,6 +117,7 @@ function halal_shop_language_switcher() {
     echo '</div></div>';
 }
 
+if ( ! function_exists( 'halal_shop_get_fallback_lang' ) ) {
 /**
  * Get the active language code for the cookie-based fallback.
  * Reads ?lang=XX from the URL, persists it in a cookie, and falls back
@@ -151,6 +152,7 @@ function halal_shop_get_fallback_lang() {
     $locale = get_option( 'WPLANG', 'ja' );
     $code   = strtolower( substr( $locale, 0, 2 ) );
     return in_array( $code, $allowed, true ) ? $code : 'ja';
+}
 }
 
 /**
