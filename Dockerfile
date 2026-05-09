@@ -15,6 +15,13 @@ RUN mkdir -p /var/www/html/wp-content/mu-plugins \
     && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \
           /var/www/html/wp-content/mu-plugins/halal-lang-fix.php
 
+# Pre-install Polylang plugin (activation handled at runtime by mu-plugin)
+RUN mkdir -p /var/www/html/wp-content/plugins \
+    && curl -sL https://downloads.wordpress.org/plugin/polylang.latest-stable.zip \
+            -o /tmp/polylang.zip \
+    && unzip -q /tmp/polylang.zip -d /var/www/html/wp-content/plugins/ \
+    && rm /tmp/polylang.zip
+
 # Set correct ownership and permissions
 RUN chown -R www-data:www-data \
         /var/www/html/wp-content/themes/halal-shop-pro \
