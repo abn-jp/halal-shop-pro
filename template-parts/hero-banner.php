@@ -80,4 +80,37 @@ $next_day = $next_day_labels[ $lang ] ?? '翌日';
                 </a>
             </div>
 
-            <div class="hero-s
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat__number">500+</div>
+                    <div class="hero-stat__label"><?php esc_html_e( 'ハラール商品', 'halal-shop-pro' ); ?></div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat__number">10,000+</div>
+                    <div class="hero-stat__label"><?php esc_html_e( '顧客数', 'halal-shop-pro' ); ?></div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat__number">5</div>
+                    <div class="hero-stat__label"><?php esc_html_e( '対応言語', 'halal-shop-pro' ); ?></div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat__number"><?php echo esc_html( $next_day ); ?></div>
+                    <div class="hero-stat__label"><?php esc_html_e( '配送対応', 'halal-shop-pro' ); ?></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="hero-image">
+            <?php $hero_img = get_theme_mod( 'hero_image', '' ); ?>
+            <?php if ( $hero_img ) : ?>
+                <img src="<?php echo esc_url( $hero_img ); ?>"
+                     alt="<?php esc_attr_e( 'Halal Food Collection', 'halal-shop-pro' ); ?>"
+                     loading="eager">
+            <?php else : ?>
+                <div style="width:480px;height:360px;background:rgba(255,255,255,0.15);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:8rem;">🍱</div>
+            <?php endif; ?>
+        </div>
+
+    </div>
+</section>
