@@ -2,13 +2,41 @@
 /**
  * Plugin Name: Halal Shop — Language Fix (Must-Use)
  * Description: Forces correct URLs on Railway, disables cache during language switch, fixes HTTPS/proxy issues. Loaded before all other plugins.
- * Version: 1.0.1
+ * Version: 1.0.2
  *
  * INSTALLATION: copy this file to wp-content/mu-plugins/halal-lang-fix.php
  * The setup-multilingual.sh script does this automatically.
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// ─── 0. FIX WP_CONTENT_URL (Railway internal hostname) ───────────────────────
+// Railway's WordPress Docker image defines WP_CONTENT_URL as a PHP constant
+// pointing to the internal service hostname (e.g. mysql-production-30ed.up.railway.app).
+// Since constants cannot be redefined after they're set (wp-config runs first),
+// we filter every enqueued CSS/JS URL and the theme directory URI at runtime.
+
+add_filter( 'style_loader_src',         'halal_fix_railway_content_url', 1 );
+add_filter( 'script_loader_src',        'halal_fix_railway_content_url', 1 );
+add_filter( 'template_directory_uri',   'halal_fix_railway_content_url', 1 );
+add_filter( 'stylesheet_directory_uri', 'halal_fix_railway_content_url', 1 );
+add_filter( 'plugins_url',              'halal_fix_railway_content_url', 1 );
+
+function halal_fix_railway_content_url( $url ) {
+    if ( ! is_string( $url ) || $url === '' ) return $url;
+    static $host = null;
+    if ( $host === null ) {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+    }
+    if ( ! $host ) return $url;
+    // Replace any Railway internal auto-generated hostname (pattern: name-production-HASH.up.railway.app)
+    // with the actual public HTTP_HOST so all asset URLs resolve correctly.
+    return preg_replace(
+        '#^(https?://)[a-z0-9-]+-production-[a-f0-9]+\.up\.railway\.app#i',
+        'https://' . $host,
+        $url
+    );
+}
 
 // ─── 1. HTTPS / Reverse-Proxy Fix (Railway, Cloudflare) ──────────────────────
 // Railway terminates SSL at its edge; WordPress sees plain HTTP inside the
@@ -34,15 +62,11 @@ if (
 // When RAILWAY_PUBLIC_DOMAIN is set, override WordPress siteurl/home so all
 // URLs are correct even if the DB has stale values.
 //
-// IMPORTANT: Railway also auto-injects an internal service hostname like
-// "mysql-production-30ed.up.railway.app" as RAILWAY_PUBLIC_DOMAIN.
-// We must ignore those auto-generated internal hostnames and only use
-// custom/public domains (e.g. halalshop.up.railway.app set manually).
-// Pattern to skip: <service>-production-<hash>.up.railway.app
+// Skip auto-generated Railway internal service hostnames
+// (pattern: <service>-production-<hash>.up.railway.app)
 
 $_halal_railway_domain = getenv( 'RAILWAY_PUBLIC_DOMAIN' ) ?: getenv( 'RAILWAY_STATIC_URL' ) ?: '';
 
-// Skip auto-generated Railway internal service hostnames
 if ( $_halal_railway_domain && preg_match( '/^[a-z0-9-]+-production-[a-f0-9]+\.up\.railway\.app$/i', $_halal_railway_domain ) ) {
     $_halal_railway_domain = ''; // treat as not set — DB values are correct
 }
@@ -50,7 +74,6 @@ if ( $_halal_railway_domain && preg_match( '/^[a-z0-9-]+-production-[a-f0-9]+\.u
 if ( $_halal_railway_domain ) {
     $_halal_railway_url = 'https://' . rtrim( $_halal_railway_domain, '/' );
 
-    // Must be added before WordPress loads options
     add_filter( 'pre_option_siteurl', function() use ( $_halal_railway_url ) {
         return $_halal_railway_url;
     }, 1 );
@@ -58,14 +81,12 @@ if ( $_halal_railway_domain ) {
         return $_halal_railway_url;
     }, 1 );
 
-    // Also fix WooCommerce store URL if needed
     add_filter( 'woocommerce_get_shop_url', function( $url ) use ( $_halal_railway_url ) {
         return str_replace( home_url(), $_halal_railway_url, $url );
     } );
 }
 
 // ─── 3. POLYLANG — FORCE CORRECT HOME URL PER LANGUAGE ────────────────────────
-// When siteurl/home is fixed above, Polylang needs to recalculate language URLs.
 
 add_action( 'init', function() {
     if ( ! function_exists( 'PLL' ) ) return;
