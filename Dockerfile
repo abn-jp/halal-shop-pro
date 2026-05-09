@@ -14,8 +14,10 @@ RUN mkdir -p /var/www/html/wp-content/mu-plugins \
     && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \
           /var/www/html/wp-content/mu-plugins/halal-lang-fix.php
 
-# Download and bundle WooCommerce plugin into the image
-# (bundling here ensures it survives Railway redeploys)
+# Install unzip (not in base wordpress image) then download & bundle WooCommerce
+RUN apt-get update && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p /var/www/html/wp-content/plugins \
     && curl -sL https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \
          -o /tmp/woocommerce.zip \
