@@ -165,3 +165,39 @@ add_action( 'plugins_loaded', function() {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
     activate_plugin( $polylang_file, '', false, true );
 }, 1 );
+
+// ─── 9. AUTO-INSTALL & ACTIVATE POLYLANG (Railway first-boot) ───────────────
+// Downloads, installs, and activates Polylang automatically using WordPress's
+// own WP_Filesystem + download_url() + unzip_file() — no system unzip needed.
+// Runs once; subsequent requests skip everything because active_plugins has it.
+
+add_action( 'plugins_loaded', function() {
+    $slug      = 'polylang/polylang.php';
+    $plug_file = WP_PLUGIN_DIR . '/polylang/polylang.php';
+
+    // Already active? Nothing to do.
+    $active = (array) get_option( 'active_plugins', [] );
+    if ( in_array( $slug, $active, true ) && file_exists( $plug_file ) ) return;
+
+    // Download & unzip if not present on disk
+    if ( ! file_exists( $plug_file ) ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+        if ( ! function_exists( 'WP_Filesystem' ) ) return;
+        WP_Filesystem();
+
+        $zip_url  = 'https://downloads.wordpress.org/plugin/polylang.latest-stable.zip';
+        $tmp_file = download_url( $zip_url );
+        if ( is_wp_error( $tmp_file ) ) return; // network unavailable — skip silently
+
+        $result = unzip_file( $tmp_file, WP_PLUGIN_DIR );
+        @unlink( $tmp_file );
+
+        if ( is_wp_error( $result ) || ! file_exists( $plug_file ) ) return;
+    }
+
+    // Activate silently (no redirect)
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    activate_plugin( $slug, '', false, true );
+}, 1 );
