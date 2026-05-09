@@ -148,3 +148,20 @@ add_action( 'init', function() {
         unset( $_GET['lang'] );
     }
 }, 1 );
+
+
+// ─── 9. AUTO-ACTIVATE POLYLANG (Railway first-boot) ──────────────────────
+// Polylang is pre-installed in the Docker image at build time.
+// This hook activates it automatically on the first request after deployment,
+// so no manual WP Admin step is required.
+
+add_action( 'plugins_loaded', function() {
+    $polylang_file = 'polylang/polylang.php';
+    if ( ! file_exists( WP_PLUGIN_DIR . '/' . $polylang_file ) ) return;
+
+    $active = (array) get_option( 'active_plugins', [] );
+    if ( in_array( $polylang_file, $active, true ) ) return; // already active
+
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    activate_plugin( $polylang_file, '', false, true );
+}, 1 );
