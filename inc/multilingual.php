@@ -206,7 +206,7 @@ function halal_normalize_url( string $url ): string {
 
     if ( $railway_host ) {
         // Force HTTPS on Railway
-     2  $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
+        $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
     }
 
     // If behind a reverse proxy (Railway / Cloudflare) and arriving via HTTPS,
