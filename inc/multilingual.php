@@ -1,6 +1,6 @@
 <?php
 /**
- * Halal Shop Pro — Multilingual Engine
+ * Halal Shop Pro â Multilingual Engine
  *
  * Handles:
  *  - Polylang string registration (theme_mod, static strings)
@@ -17,25 +17,25 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 1. LANGUAGE DEFINITIONS (single source of truth)
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 define( 'HALAL_LANGS', [
-    'ja' => [ 'name' => '日本語',   'locale' => 'ja',    'flag' => '🇯🇵', 'rtl' => false ],
-    'en' => [ 'name' => 'English',  'locale' => 'en_US', 'flag' => '🇬🇧', 'rtl' => false ],
-    'id' => [ 'name' => 'Indonesia','locale' => 'id_ID', 'flag' => '🇮🇩', 'rtl' => false ],
-    'ar' => [ 'name' => 'العربية',  'locale' => 'ar',    'flag' => '🇸🇦', 'rtl' => true  ],
-    'ms' => [ 'name' => 'Melayu',   'locale' => 'ms_MY', 'flag' => '🇲🇾', 'rtl' => false ],
+    'ja' => [ 'name' => 'æ¥æ¬èª',   'locale' => 'ja',    'flag' => 'ð¯ðµ', 'rtl' => false ],
+    'en' => [ 'name' => 'English',  'locale' => 'en_US', 'flag' => 'ð¬ð§', 'rtl' => false ],
+    'id' => [ 'name' => 'Indonesia','locale' => 'id_ID', 'flag' => 'ð®ð©', 'rtl' => false ],
+    'ar' => [ 'name' => 'Ø§ÙØ¹Ø±Ø¨ÙØ©',  'locale' => 'ar',    'flag' => 'ð¸ð¦', 'rtl' => true  ],
+    'ms' => [ 'name' => 'Melayu',   'locale' => 'ms_MY', 'flag' => 'ð²ð¾', 'rtl' => false ],
 ] );
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 2. CURRENT LANGUAGE DETECTION
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 /**
  * Get active 2-char language slug from any available source.
- * Priority: Polylang → WPML → cookie/query-string fallback.
+ * Priority: Polylang â WPML â cookie/query-string fallback.
  */
 function halal_lang(): string {
     // Polylang
@@ -51,9 +51,9 @@ function halal_lang(): string {
     return halal_shop_get_fallback_lang();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 3. LANGUAGE-AWARE THEME_MOD WRAPPER
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 /**
  * Like get_theme_mod() but returns the translated value for the active language.
@@ -69,33 +69,33 @@ function halal_mod( string $key, string $default = '' ): string {
     $lang = halal_lang();
     $base = get_theme_mod( $key, $default );
 
-    // 1. Inline translation table — covers all hero/customizer strings without
-    //    requiring manual entry in Polylang → Languages → String Translations.
+    // 1. Inline translation table â covers all hero/customizer strings without
+    //    requiring manual entry in Polylang â Languages â String Translations.
     static $inline = null;
     if ( $inline === null ) {
         $inline = [
             'hero_title' => [
                 'en' => "Safe & Trusted Halal Food\nOnline Shop",
                 'id' => "Toko Online Makanan Halal\nTerpercaya & Aman",
-                'ar' => "متجر إلكتروني للطعام الحلال\nآمن وموثوق",
+                'ar' => "ÙØªØ¬Ø± Ø¥ÙÙØªØ±ÙÙÙ ÙÙØ·Ø¹Ø§Ù Ø§ÙØ­ÙØ§Ù\nØ¢ÙÙ ÙÙÙØ«ÙÙ",
                 'ms' => "Kedai Dalam Talian Makanan Halal\nSelamat & Dipercayai",
             ],
             'hero_subtitle' => [
                 'en' => 'Delivering Muslim-friendly food nationwide. Curated Halal certified products for Muslim residents and visitors in Japan.',
                 'id' => 'Mengirimkan makanan ramah Muslim ke seluruh negeri. Produk bersertifikat Halal pilihan untuk penduduk dan pengunjung Muslim di Jepang.',
-                'ar' => 'توصيل الطعام الصديق للمسلمين في جميع أنحاء البلاد. منتجات حلال معتمدة ومختارة بعناية للمقيمين والزوار المسلمين في اليابان.',
+                'ar' => 'ØªÙØµÙÙ Ø§ÙØ·Ø¹Ø§Ù Ø§ÙØµØ¯ÙÙ ÙÙÙØ³ÙÙÙÙ ÙÙ Ø¬ÙÙØ¹ Ø£ÙØ­Ø§Ø¡ Ø§ÙØ¨ÙØ§Ø¯. ÙÙØªØ¬Ø§Øª Ø­ÙØ§Ù ÙØ¹ØªÙØ¯Ø© ÙÙØ®ØªØ§Ø±Ø© Ø¨Ø¹ÙØ§ÙØ© ÙÙÙÙÙÙÙÙ ÙØ§ÙØ²ÙØ§Ø± Ø§ÙÙØ³ÙÙÙÙ ÙÙ Ø§ÙÙØ§Ø¨Ø§Ù.',
                 'ms' => 'Menghantar makanan mesra Muslim ke seluruh negara. Produk Halal bersijil pilihan untuk penduduk dan pelawat Muslim di Jepun.',
             ],
             'announcement_text' => [
-                'en' => '🎉 Free Shipping on orders over ¥5,000 | Halal Certified Products',
-                'id' => '🎉 Gratis Ongkir untuk pembelian di atas ¥5,000 | Produk Bersertifikat Halal',
-                'ar' => '🎉 شحن مجاني للطلبات التي تتجاوز ¥5,000 | منتجات معتمدة حلال',
-                'ms' => '🎉 Penghantaran Percuma untuk pembelian melebihi ¥5,000 | Produk Bersijil Halal',
+                'en' => 'ð Free Shipping on orders over Â¥5,000 | Halal Certified Products',
+                'id' => 'ð Gratis Ongkir untuk pembelian di atas Â¥5,000 | Produk Bersertifikat Halal',
+                'ar' => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨Ø§Øª Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000 | ÙÙØªØ¬Ø§Øª ÙØ¸ØªÙØ¯Ø© Ø­ÙØ§Ù',
+                'ms' => 'ð Penghantaran Percuma untuk pembelian melebihi Â¥5,000 | Produk Bersijil Halal',
             ],
             'footer_about_text' => [
                 'en' => 'Japan\'s trusted Halal food online shop. We deliver certified Halal products to Muslim residents and visitors nationwide.',
                 'id' => 'Toko online makanan Halal terpercaya di Jepang. Kami mengantarkan produk Halal bersertifikat ke seluruh negeri.',
-                'ar' => 'متجر الطعام الحلال الموثوق في اليابان. نوصل المنتجات الحلال المعتمدة للمسلمين في جميع أنحاء البلاد.',
+                'ar' => 'ÙØªØ¬Ø± Ø§ÙØ·Ø¹Ø§Ù Ø§ÙØ­ÙØ§Ù Ø§ÙÙÙØ«ÙÙ ÙÙ Ø§ÙÙØ§Ø¨Ø§Ù. ÙÙØµÙ Ø§ÙÙÙØªØ¬Ø§Øª Ø§ÙØ­ÙØ§Ù Ø§ÙÙØ¹ØªÙØ¯Ø© ÙÙÙØ³ÙÙÙÙ ÙÙ Ø¬ÙÙØ¹ Ø£ÙØ­Ø§Ø¡ Ø§ÙØ¨ÙØ§Ø¯.',
                 'ms' => 'Kedai dalam talian makanan Halal yang dipercayai di Jepun. Kami menghantar produk Halal bersijil ke seluruh negara.',
             ],
         ];
@@ -115,14 +115,14 @@ function halal_mod( string $key, string $default = '' ): string {
     return $base !== '' ? $base : $default;
 }
 
-// ── theme_mod filters — translate customizer values at get_theme_mod() level ──
+// ââ theme_mod filters â translate customizer values at get_theme_mod() level ââ
 // This ensures any direct get_theme_mod('hero_title') call also gets translated.
 add_filter( 'theme_mod_hero_title', function( $val ) {
     $lang = halal_lang();
     $t = [
         'en' => "Safe & Trusted Halal Food\nOnline Shop",
         'id' => "Toko Online Makanan Halal\nTerpercaya & Aman",
-        'ar' => "متجر إلكتروني للطعام الحلال\nآمن وموثوق",
+        'ar' => "ÙØªØ¬Ø± Ø¥ÙÙØªØ±ÙÙÙ ÙÙØ·Ø¹Ø§Ù Ø§ÙØ­ÙØ§Ù\nØ¢ÙÙ ÙÙÙØ«ÙÙ",
         'ms' => "Kedai Dalam Talian Makanan Halal\nSelamat & Dipercayai",
     ];
     return $t[ $lang ] ?? $val;
@@ -133,17 +133,17 @@ add_filter( 'theme_mod_hero_subtitle', function( $val ) {
     $t = [
         'en' => 'Delivering Muslim-friendly food nationwide. Curated Halal certified products for Muslim residents and visitors in Japan.',
         'id' => 'Mengirimkan makanan ramah Muslim ke seluruh negeri. Produk bersertifikat Halal pilihan untuk penduduk dan pengunjung Muslim di Jepang.',
-        'ar' => 'توصيل الطعام الصديق للمسلمين في جميع أنحاء البلاد. منتجات حلال معتمدة ومختارة بعناية للمقيمين والزوار المسلمين في اليابان.',
+        'ar' => 'ØªÙØµÙÙ Ø§ÙØ·Ø¹Ø§Ù Ø§ÙØµØ¯ÙÙ ÙÙÙØ³ÙÙÙÙ ÙÙ Ø¬ÙÙØ¹ Ø£ÙØ­Ø§Ø¡ Ø§ÙØ¨ÙØ§Ø¯. ÙÙØªØ¬Ø§Øª Ø­ÙØ§Ù ÙØ¹ØªÙØ¯Ø© ÙÙØ®ØªØ§Ø±Ø© Ø¨Ø¹ÙØ§ÙØ© ÙÙÙÙÙÙÙÙ ÙØ§ÙØ²ÙØ§Ø± Ø§ÙÙØ³ÙÙÙÙ ÙÙ Ø§ÙÙØ§Ø¨Ø§Ù.',
         'ms' => 'Menghantar makanan mesra Muslim ke seluruh negara. Produk Halal bersijil pilihan untuk penduduk dan pelawat Muslim di Jepun.',
     ];
     return $t[ $lang ] ?? $val;
 } );
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 4. POLYLANG STRING REGISTRATION
 //    Registers every user-visible theme string so it appears in
-//    WP Admin → Languages → String Translations for manual translation.
-// ═══════════════════════════════════════════════════════════════════════════════
+//    WP Admin â Languages â String Translations for manual translation.
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_action( 'init', 'halal_pll_register_strings', 20 );
 function halal_pll_register_strings(): void {
@@ -151,11 +151,11 @@ function halal_pll_register_strings(): void {
 
     $group = 'Halal Shop Pro';
 
-    // ── Customizer / theme_mod strings ────────────────────────────────────────
+    // ââ Customizer / theme_mod strings ââââââââââââââââââââââââââââââââââââââââ
     $mods = [
-        'announcement_text'  => get_theme_mod( 'announcement_text',  '🎉 全国送料無料 ¥5,000以上 | Free Shipping on orders over ¥5,000' ),
-        'hero_title'         => get_theme_mod( 'hero_title',          "ハラールフードの\n安心・安全な\nオンラインショップ" ),
-        'hero_subtitle'      => get_theme_mod( 'hero_subtitle',       'ムスリムフレンドリーな食品を全国にお届け。厳選されたハラール認証食品を取り揃えています。' ),
+        'announcement_text'  => get_theme_mod( 'announcement_text',  'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000' ),
+        'hero_title'         => get_theme_mod( 'hero_title',          "ãã©ã¼ã«ãã¼ãã®\nå®å¿ã»å®å¨ãª\nãªã³ã©ã¤ã³ã·ã§ãã" ),
+        'hero_subtitle'      => get_theme_mod( 'hero_subtitle',       'ã ã¹ãªã ãã¬ã³ããªã¼ãªé£åãå¨å½ã«ãå±ããå³é¸ããããã©ã¼ã«èªè¨¼é£åãåãæãã¦ãã¾ãã' ),
         'footer_about_text'  => get_theme_mod( 'footer_about_text',   '' ),
         'footer_copyright'   => get_theme_mod( 'footer_copyright',    '' ),
     ];
@@ -166,22 +166,22 @@ function halal_pll_register_strings(): void {
         }
     }
 
-    // ── Static UI strings ─────────────────────────────────────────────────────
+    // ââ Static UI strings âââââââââââââââââââââââââââââââââââââââââââââââââââââ
     $strings = [
-        'shop_now'              => '商品を見る / Shop Now',
-        'halal_certified_badge' => 'ハラール認証取得 | Halal Certified',
-        'free_shipping_notice'  => '🎉 全国送料無料 ¥5,000以上 | Free Shipping on orders over ¥5,000',
-        'tax_note'              => '※ 消費税10%を含みます / Includes 10% Japanese Consumption Tax',
-        'shipping_notice'       => '🚚 全国配送対応（ヤマト運輸・佐川急便） | Nationwide delivery via Yamato & Sagawa',
-        'customer_reviews'      => 'お客様の声 / Customer Reviews',
-        'read_all_reviews'      => 'すべてのレビューを見る / Read All Reviews',
-        'added_to_cart'         => 'カートに追加しました / Added to cart!',
-        'view_cart'             => 'カートを見る / View Cart',
-        'out_of_stock'          => '在庫切れ / Out of Stock',
-        'subscribe_thanks'      => 'ご登録ありがとうございます / Thank you for subscribing!',
-        'halal_info_title'      => 'ハラールとは？ / What is Halal?',
-        'hero_cta_cert'         => 'Halal認証とは？',
-        'newsletter_title'      => 'ニュースレター登録 / Subscribe to Newsletter',
+        'shop_now'              => 'ååãè¦ã / Shop Now',
+        'halal_certified_badge' => 'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified',
+        'free_shipping_notice'  => 'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000',
+        'tax_note'              => 'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax',
+        'shipping_notice'       => 'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa',
+        'customer_reviews'      => 'ãå®¢æ§ã®å£° / Customer Reviews',
+        'read_all_reviews'      => 'ãã¹ã¦ã®ã¬ãã%ã¼ãè¦ã / Read All Reviews',
+        'added_to_cart'         => 'ã«ã¼ãã«è¿½å ãã¾ãã / Added to cart!',
+        'view_cart'             => 'ã«ã¼ããè¦ã / View Cart',
+        'out_of_stock'          => 'å¨åº«åã / Out of Stock',
+        'subscribe_thanks'      => 'ãç»é²ãããã¨ããããã¾ã / Thank you for subscribing!',
+        'halal_info_title'      => 'ãã©ã¼ã«ã¨ã¯ï¼ / What is Halal?',
+        'hero_cta_cert'         => 'Halalèªè¨¼ã¨ã¯ï¼',
+        'newsletter_title'      => 'ãã¥ã¼ã¹ã¬ã¿ã¼ç»é² / Subscribe to Newsletter',
     ];
 
     foreach ( $strings as $key => $value ) {
@@ -189,11 +189,11 @@ function halal_pll_register_strings(): void {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 5. RAILWAY & LOCALHOST URL NORMALIZATION
 //    WordPress stores siteurl/home in the DB. On Railway, if the DB still
 //    has localhost values, all URLs break. This filter fixes it at runtime.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_filter( 'option_siteurl', 'halal_normalize_url' );
 add_filter( 'option_home',    'halal_normalize_url' );
@@ -206,7 +206,7 @@ function halal_normalize_url( string $url ): string {
 
     if ( $railway_host ) {
         // Force HTTPS on Railway
-        $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
+        $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
     }
 
     // If behind a reverse proxy (Railway / Cloudflare) and arriving via HTTPS,
@@ -232,20 +232,20 @@ add_action( 'init', function () {
     }
 } );
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 6. WOOCOMMERCE MULTILINGUAL FIXES
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_action( 'init', 'halal_woocommerce_multilingual_init' );
 function halal_woocommerce_multilingual_init(): void {
     if ( ! class_exists( 'WooCommerce' ) ) return;
 
-    // ── A. Shop page: load translated version ────────────────────────────────
+    // ââ A. Shop page: load translated version ââââââââââââââââââââââââââââââââ
     // Polylang handles this automatically via pll_get_post(), but we ensure
     // WooCommerce page IDs resolve to the translated page for the active language.
     add_filter( 'woocommerce_get_page_id', 'halal_translate_wc_page_id', 10, 2 );
 
-    // ── B. Cart/checkout fragments: include language in AJAX key ─────────────
+    // ââ B. Cart/checkout fragments: include language in AJAX key âââââââââââââ
     add_filter( 'woocommerce_cart_hash', function( $hash ) {
         return $hash . '_' . halal_lang();
     } );
@@ -257,20 +257,20 @@ function halal_translate_wc_page_id( $page_id, $page ) {
     return $translated ?: $page_id;
 }
 
-// ── C. WooCommerce email: use customer language, not admin language ──────────
+// ââ C. WooCommerce email: use customer language, not admin language ââââââââââ
 add_filter( 'woocommerce_email_setup_locale', '__return_false' );
 
-// ── D. Currency stays the same across languages (¥ for this store) ──────────
+// ââ D. Currency stays the same across languages (Â¥ for this store) ââââââââââ
 // If you need per-language currency, install "Currency Switcher for WooCommerce"
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 7. HREFLANG SEO TAGS
 //    Tells search engines which URL serves which language.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_action( 'wp_head', 'halal_hreflang_tags', 1 );
 function halal_hreflang_tags(): void {
-    // Polylang outputs its own hreflang — don't duplicate
+    // Polylang outputs its own hreflang â don't duplicate
     if ( function_exists( 'pll_current_language' ) ) return;
     // WPML also handles this
     if ( function_exists( 'icl_get_languages' ) ) return;
@@ -286,9 +286,9 @@ function halal_hreflang_tags(): void {
     echo '<link rel="alternate" hreflang="x-default" href="' . esc_url( $base_url ) . '">' . "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 8. BODY CLASS & HTML DIR ATTRIBUTE
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_filter( 'body_class', 'halal_lang_body_classes' );
 function halal_lang_body_classes( array $classes ): array {
@@ -303,7 +303,7 @@ function halal_lang_body_classes( array $classes ): array {
     return $classes;
 }
 
-// ── HTML dir attribute (required for proper RTL rendering) ──────────────────
+// ââ HTML dir attribute (required for proper RTL rendering) ââââââââââââââââââ
 add_filter( 'language_attributes', 'halal_html_dir_attribute' );
 function halal_html_dir_attribute( string $output ): string {
     $lang = halal_lang();
@@ -321,11 +321,11 @@ function halal_html_dir_attribute( string $output ): string {
     return $output;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 9. FLATSOME THEME COMPATIBILITY
 //    Flatsome has its own language switcher widget and caches layout.
 //    These hooks prevent conflicts.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_action( 'after_setup_theme', 'halal_flatsome_compat', 100 );
 function halal_flatsome_compat(): void {
@@ -352,7 +352,7 @@ function halal_flatsome_compat(): void {
     add_filter( 'flatsome_show_language_switcher', '__return_false' );
 }
 
-// ── Disable ALL caching plugins when language is being switched ──────────────
+// ââ Disable ALL caching plugins when language is being switched ââââââââââââââ
 add_action( 'init', 'halal_disable_cache_on_lang_switch' );
 function halal_disable_cache_on_lang_switch(): void {
     // Only if we are handling a lang switch (query string present)
@@ -370,16 +370,16 @@ function halal_disable_cache_on_lang_switch(): void {
     do_action( 'litespeed_purge_all' );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 10. NAV MENU LANGUAGE FILTER
 //     When Polylang is active, menus are auto-filtered per language.
 //     When using the cookie fallback, we still want menu items filtered
 //     if they have a custom field "lang" set.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_filter( 'wp_nav_menu_objects', 'halal_filter_menu_by_language', 10, 2 );
 function halal_filter_menu_by_language( array $items, object $args ): array {
-    // Polylang handles this natively — skip
+    // Polylang handles this natively â skip
     if ( function_exists( 'pll_current_language' ) ) return $items;
 
     $lang = halal_lang();
@@ -392,25 +392,25 @@ function halal_filter_menu_by_language( array $items, object $args ): array {
     } );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 11. POLYLANG: ENSURE MISSING TRANSLATIONS REDIRECT TO DEFAULT
 //     When a page has no translation for a language, Polylang by default
 //     hides the link. We redirect to the default language instead.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_filter( 'pll_the_language_link', 'halal_pll_fallback_link', 10, 2 );
 function halal_pll_fallback_link( $url, $lang ) {
     if ( $url ) return $url;
-    // No translation — link to the homepage in that language
+    // No translation â link to the homepage in that language
     if ( function_exists( 'pll_home_url' ) ) {
         return pll_home_url( $lang );
     }
     return $url;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 12. JAVASCRIPT: PASS LANGUAGE DATA TO FRONTEND
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_action( 'wp_enqueue_scripts', 'halal_localize_lang_data', 20 );
 function halal_localize_lang_data(): void {
@@ -429,11 +429,11 @@ function halal_localize_lang_data(): void {
     ] );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 // 13. INLINE TRANSLATION STRINGS (fallback when no .mo files exist)
 //     This provides translations for __() / _e() calls in the theme
 //     without needing compiled .mo files, using WordPress's gettext filter.
-// ═══════════════════════════════════════════════════════════════════════════════
+// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 add_filter( 'gettext',        'halal_inline_translations', 10, 3 );
 add_filter( 'gettext_with_context', 'halal_inline_translations', 10, 3 );
@@ -455,23 +455,23 @@ function halal_inline_translations( string $translation, string $text, string $d
 }
 
 /**
- * Translation map: source (Japanese/mixed) → target language.
- * Add or expand entries here for each new string in the theme.
+ * Translation map: source (Japanese/mixed) â target language.
+ * Add or expand entries here for fach new string in the theme.
  */
 function halal_get_translation_map(): array {
     return [
 
-        // ────────────────────────────────────────────────────────────────────
+        // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
         'en' => [
             // Hero
-            'ハラール認証取得 | Halal Certified'                                  => 'Halal Certified ✓',
-            '商品を見る / Shop Now'                                               => 'Shop Now',
-            'Halal認証とは？'                                                     => 'What is Halal?',
-            'ハラール商品'                                                         => 'Halal Products',
-            '顧客数'                                                              => 'Customers',
-            '対応言語'                                                            => 'Languages',
-            '配送対応'                                                            => 'Delivery',
-            '翌日'                                                                => 'Next Day',
+            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                  => 'Halal Certified â',
+            'ååãè¦ã / Shop Now'                                               => 'Shop Now',
+            'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'What is Halal?',
+            'ãã©ã¼ã«åå'                                                         => 'Halal Products',
+            'é¡§å®¢æ°'                                                              => 'Customers',
+            'å¯¾å¿è¨èª'                                                            => 'Languages',
+            'ééå¯¾å¿'                                                            => 'Delivery',
+            'ç¿æ¥'                                                                => 'Next Day',
 
             // Header / Nav
             'Select Language'                                                     => 'Select Language',
@@ -497,20 +497,20 @@ function halal_get_translation_map(): array {
             'Hero Banner'                                                         => 'Hero Banner',
 
             // Announcement
-            '🎉 全国送料無料 ¥5,000以上 | Free Shipping on orders over ¥5,000'   => '🎉 Free Shipping on orders over ¥5,000',
+            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Free Shipping on orders over Â¥5,000',
 
             // Testimonials
-            'お客様の声 / Customer Reviews'                                       => 'Customer Reviews',
+            'ãå®¢æ§ã®å£° / Customer Reviews'                                       => 'Customer Reviews',
             'What our Muslim customers around the world say'                      => 'What our Muslim customers around the world say',
-            '東京在住 / Pakistani'                                                => 'Tokyo / Pakistani',
-            '大阪在住 / Indonesian'                                               => 'Osaka / Indonesian',
-            '訪日観光客 / Saudi Arabia'                                           => 'Visitor / Saudi Arabia',
-            'すべてのレビューを見る / Read All Reviews'                           => 'Read All Reviews',
+            'æ±äº¬å¨ä½ / Pakistani'                                                => 'Tokyo / Pakistani',
+            'å¤§éªå¨ä½ / Indonesian'                                               => 'Osaka / Indonesian',
+            'è¨ªæ¥è¦³åå®¢ / Saudi Arabia'                                           => 'Visitor / Saudi Arabia',
+            'ãã¹ã¦ã®ã¬ãã¥ã¼ãè¦ã / Read All Reviews'                           => 'Read All Reviews',
 
             // WooCommerce
             'Home'                                                                => 'Home',
-            '※ 消費税10%を含みます / Includes 10% Japanese Consumption Tax'       => 'Includes 10% Japanese Consumption Tax',
-            '🚚 全国配送対応（ヤマト運輸・佐川急便） | Nationwide delivery via Yamato & Sagawa' => '🚚 Nationwide delivery (Yamato / Sagawa)',
+            'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'Includes 10% Japanese Consumption Tax',
+            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð Nationwide delivery (Yamato / Sagawa)',
             'Added to cart!'                                                      => 'Added to cart!',
             'Out of Stock'                                                        => 'Out of Stock',
             'Thank you for subscribing!'                                          => 'Thank you for subscribing!',
@@ -519,17 +519,17 @@ function halal_get_translation_map(): array {
             'What is Halal?'                                                      => 'What is Halal?',
         ],
 
-        // ────────────────────────────────────────────────────────────────────
+        // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
         'id' => [
             // Hero
-            'ハラール認証取得 | Halal Certified'                                  => 'Bersertifikat Halal ✓',
-            '商品を見る / Shop Now'                                               => 'Belanja Sekarang',
-            'Halal認証とは？'                                                     => 'Apa itu Halal?',
-            'ハラール商品'                                                         => 'Produk Halal',
-            '顧客数'                                                              => 'Pelanggan',
-            '対応言語'                                                            => 'Bahasa',
-            '配送対応'                                                            => 'Pengiriman',
-            '翌日'                                                                => 'Besok',
+            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                  => 'Bersertifikat Halal â',
+            'ååãè¦ã / Shop Now'                                               => 'Belanja Sekarang',
+            'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'Apa itu Halal?',
+            'ãã©ã¼ã«åå'                                                         => 'Produk Halal',
+            'é¡§å®¢æ°'                                                              => 'Pelanggan',
+            'å¯¾å¿è¨èª'                                                            => 'Bahasa',
+            'ééå¯¾å¿'                                                            => 'Pengiriman',
+            'ç¿æ¥'                                                                => 'Besok',
 
             // Header
             'Shopping Cart'                                                       => 'Keranjang Belanja',
@@ -546,58 +546,175 @@ function halal_get_translation_map(): array {
             'Cart'                                                                => 'Keranjang',
 
             // Announcement
-            '🎉 全国送料無料 ¥5,000以上 | Free Shipping on orders over ¥5,000'   => '🎉 Gratis Ongkir untuk pembelian di atas ¥5,000',
+            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Gratis Ongkir untuk pembelian di atas Â¥5,000',
 
             // Testimonials
-            'お客様の声 / Customer Reviews'                                       => 'Ulasan Pelanggan',
+            'ãå®¢æ§ã®å£° / Customer Reviews'                                       => 'Ulasan Pelanggan',
             'What our Muslim customers around the world say'                      => 'Apa kata pelanggan Muslim kami di seluruh dunia',
-            '東京在住 / Pakistani'                                                => 'Tokyo / Pakistan',
-            '大阪在住 / Indonesian'                                               => 'Osaka / Indonesia',
-            '訪日観光客 / Saudi Arabia'                                           => 'Wisatawan / Arab Saudi',
-            'すべてのレビューを見る / Read All Reviews'                           => 'Baca Semua Ulasan',
+            'æ±äº¬å¨ä½ / Pakistani'                                                => 'Tokyo / Pakistan',
+            'å¤§éªå¨ä½ / Indonesian'                                               => 'Osaka / Indonesia',
+            'è¨ªæ¥è¦³åå®¢ / Saudi Arabia'                                           => 'Wisatawan / Arab Saudi',
+            'ãã¹ã¦ã®ã¬ãã¥ã¼ãè¦ã / Read All Reviews'                           => 'Baca Semua Ulasan',
 
             // WooCommerce
             'Home'                                                                => 'Beranda',
-            '※ 消費税10%を含みます / Includes 10% Japanese Consumption Tax'       => 'Sudah termasuk Pajak Konsumsi Jepang 10%',
-            '🚚 全国配送対応（ヤマト運輸・佐川急便） | Nationwide delivery via Yamato & Sagawa' => '🚚 Pengiriman ke seluruh Jepang (Yamato / Sagawa)',
+            'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'Sudah termasuk Pajak Konsumsi Jepang 10%',
+            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð Pengiriman ke seluruh Jepang (Yamato / Sagawa)',
             'Added to cart!'                                                      => 'Ditambahkan ke keranjang!',
             'Out of Stock'                                                        => 'Stok Habis',
             'Thank you for subscribing!'                                          => 'Terima kasih telah berlangganan!',
         ],
 
-        // ────────────────────────────────────────────────────────────────────
+        // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
         'ar' => [
             // Hero
-            'ハラール認証取得 | Halal Certified'                                  => 'معتمد حلال ✓',
-            '商品を見る / Shop Now'                                               => 'تسوق الآن',
-            'Halal認証とは？'                                                     => 'ما هو الحلال؟',
-            'ハラール商品'                                                         => 'منتجات حلال',
-            '顧客数'                                                              => 'العملاء',
-            '対応言語'                                                            => 'اللغات',
-            '配送対応'                                                            => 'التوصيل',
-            '翌日'                                                                => 'اليوم التالي',
+            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                  => 'ÙØ¹ØªÙØ¯ Ø­ÙØ§Ù â',
+            'ååãè¦ã / Shop Now'                                               => 'ØªØ³ÙÙ Ø§ÙØ¢Ù',
+            'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'ÙØ§ ÙÙ Ø§ÙØ­ÙØ§ÙØ',
+            'ãã©ã¼ã«åå'                                                         => 'ÙÙØªØ¬Ø§Øª Ø­ÙØ§Ù',
+            'é¡§å®¢æ°'                                                              => 'Ø§ÙØ¹ÙÙØ§Ø¡',
+            'å¯¾å¿è¨èª'                                                            => 'Ø§ÙÙØºØ§Øª',
+            'ééå¯¾å¿'                                                            => 'Ø§ÙØªÙØµÙÙ',
+            'ç¿æ¥'                                                                => 'Ø§ÙÙÙÙ Ø§ÙØªØ§ÙÙ',
 
             // Header
-            'Shopping Cart'                                                       => 'سلة التسوق',
-            'Close cart'                                                          => 'أغلق السلة',
-            'Your Cart'                                                           => 'سلتك',
-            'Qty:'                                                                => 'الكمية:',
-            'View Cart'                                                           => 'عرض السلة',
-            'Checkout'                                                            => 'الدفع',
-            'Your cart is empty.'                                                 => 'سلتك فارغة.',
-            'Total'                                                               => 'الإجمالي',
-            'My Account'                                                          => 'حسابي',
-            'Account'                                                             => 'الحساب',
-            'Login'                                                               => 'تسجيل الدخول',
-            'Cart'                                                                => 'السلة',
+            'Shopping Cart'                                                       => 'Ø³ÙØ© Ø§ÙØªØ³ÙÙ',
+            'Close cart'                                                          => 'Ø£ØºÙÙ Ø§ÙØ³ÙØ©',
+            'Your Cart'                                                           => 'Ø³ÙØªÙ',
+            'Qty:'                                                                => 'Ø§ÙÙÙÙØ©:',
+            'View Cart'                                                           => 'Ø¹Ø±Ø¶ Ø§ÙØ³ÙØ©',
+            'Checkout'                                                            => 'Ø§ÙØ¯ÙØ¹',
+            'Your cart is empty.'                                                 => 'Ø³ÙØªÙ ÙØ§Ø±ØºØ©.',
+            'Total'                                                               => 'Ø§ÙØ¥Ø¬ÙØ§ÙÙ',
+            'My Account'                                                          => 'Ø­Ø³Ø§Ø¨Ù',
+            'Account'                                                             => 'Ø§ÙØ­Ø³Ø§Ø¨',
+            'Login'                                                               => 'ØªØ³Ø¬ÙÙ Ø§ÙØ¯Ø®ÙÙ',
+            'Cart'                                                                => 'Ø§ÙØ³ÙØ©',
 
             // Announcement
-            '🎉 全国送料無料 ¥5,000以上 | Free Shipping on orders over ¥5,000'   => '🎉 شحن مجاني للطلبات التي تتجاوز ¥5,000',
+            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨Ø§Øª Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000',
 
             // Testimonials
-            'お客様の声 / Customer Reviews'                                       => 'آراء العملاء',
-            'What our Muslim customers around the world say'                      => 'ماذا يقول عملاؤنا المسلمون حول العالم',
-            'すべてのレビューを見る / Read All Reviews'                           => 'قراءة جميع التقييمات',
+            'ãå®¢æ§ã®å£° / Customer Reviews'                                       => 'Ø¢Ø±Ø§Ø¡ Ø§ÙØ¹ÙÙØ§Ø¡',
+            'What our Muslim customers around the world say'                      => 'ÙØ§Ø°Ø§ ÙÙÙÙ Ø¹ÙÙØ§Ø¤ÙØ§ Ø§ÙÙØ³ÙÙÙÙ Ø­ÙÙ Ø§ÙØ¹Ø§ÙÙ',
+            'ãã¹ã¦ã®ã¬ãã¥ã¼ãè¦ã / Read All Reviews'                           => 'ÙØ±Ø§Ø¡Ø© Ø¬ÙÙØ¹ Ø§ÙØªÙÙÙÙØ§Øª',
 
             // WooCommerce
-          
+            'Home'                                                                => 'Ø§ÙØ±Ø¦ÙØ³ÙØ©',
+            'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'ÙØ´ÙÙ Ø¶Ø±ÙØ¨Ø© Ø§ÙØ§Ø³ØªÙÙØ§Ù Ø§ÙÙØ§Ø¨Ø§ÙÙØ© 10%',
+            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð ØªÙØµÙÙ ÙÙ Ø¬ÙÙØ¹ Ø£ÙØ­Ø§Ø¡ Ø§ÙÙØ§Ø¨Ø§Ù (Yamato / Sagawa)',
+            'Added to cart!'                                                      => 'ØªÙØª Ø§ÙØ¥Ø¶Ø§ÙØ© Ø¥ÙÙ Ø§ÙØ³ÙØ©!',
+            'Out of Stock'                                                          => 'ÙÙØ°  Ø§ÙÙØ®Ø²ÙÙ',
+            'Thank you for subscribing!'                                          => 'Ø´ÙØ±Ø§Ù Ø¹ÙÙ Ø§Ø´ØªØ±Ø§ÙÙ!',
+        ],
+
+        // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+        'ms' => [
+            // Hero
+            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                  => 'Produk Halal Diperakui â',
+            'ååãè¦ã / Shop Now'                                               => 'Beli Sekarang',
+            'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'Apa itu Halal?',
+            'ãã©ã¼ã«åå'                                                         => 'Produk Halal',
+            'é¡§å®¢æ°'                                                              => 'Pelanggan',
+            'å¯¾å¿è¨èª'                                                            => 'Bahasa',
+            'ééå¯¾å¿'                                                            => 'Penghantaran',
+            'ç¿æ¥'                                                                => 'Esok Hari',
+
+            // Header
+            'Shopping Cart'                                                       => 'Troli Beli-belah',
+            'Close cart'                                                          => 'Tutup troli',
+            'Open cart'                                                           => 'Buka troli',
+            'Your Cart'                                                           => 'Troli Anda',
+            'Qty:'                                                                => 'Kuantiti:',
+            'View Cart'                                                           => 'Lihat Troli',
+            'Checkout'                                                            => 'Bayar',
+            'Your cart is empty.'                                                 => 'Troli anda kosong.',
+            'Total'                                                               => 'Jumlah',
+            'Wishlist'                                                            => 'Senarai Hajat',
+            'My Account'                                                          => 'Akaun Saya',
+            'Account'                                                             => 'Akaun',
+            'Login'                                                               => 'Log Masuk',
+            'Menu'                                                                => 'Menu',
+            'Close menu'                                                          => 'Tutup menu',
+            'Cart'                                                                => 'Troli',
+
+            // Announcement
+            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Penghantaran Percuma untuk pembelian melebihi Â¥5,000',
+
+            // Testimonials
+            'ãå®¢æ§ã®å£° / Customer Reviews'                                       => 'Ulasan Pelanggan',
+            'What our Muslim customers around the world say'                      => 'Apa kata pelanggan Muslim kami di seluruh dunia',
+            'æ±äº¬å¨ä½ / Pakistani'                                                => 'Tokyo / Pakistan',
+            'å¤§éªå¨ä½ / Indonesian'                                               => 'Osaka / Indonesia',
+            'è¨ªæ¥è¦³åå®¢ / Saudi Arabia'                                           => 'Pelancong / Arab Saudi',
+            'ãã¹ã¦ã®ã¬ãã¥ã¼ãè¦ã / Read All Reviews'                           => 'Baca Semua Ulasan',
+
+            // WooCommerce
+            'Home'                                                                => 'Laman Utama',
+            'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'Sudah termasuk Cukai Penggunaan Jepun 10%',
+            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð Penghantaran ke seluruh Jepun (Yamato / Sagawa)',
+            'Added to cart!'                                                      => 'Ditambahkan ke troli!',
+            'Out of Stock'                                                        => 'Kehabisan Stok',
+            'Thank you for subscribing!'                                          => 'Terima kasih kerana melanggan!',
+        ],
+
+    ]; // end return [ 'en'=>..., 'id'=>..., 'ar'=>..., 'ms'=>... ]
+}
+
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// 14. FALLBACK LANGUAGE DETECTION (cookie / query-string)
+//     Used by halal_lang() when no multilingual plugin is active.
+// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+
+/**
+ * Returns a 2-char language slug from cookie, query-string, or Accept-Language.
+ * Sets the cookie when switching via ?lang=XX so future page-loads remember it.
+ */
+function halal_shop_get_fallback_lang(): string {
+    static $cached = null;
+    if ( $cached !== null ) return $cached;
+
+    $allowed = array_keys( HALAL_LANGS ); // ['ja','en','id','ar','ms']
+
+    // 1. Query string: ?lang=en  â highest priority, also sets cookie
+    if ( ! empty( $_GET['lang'] ) ) {
+        $slug = sanitize_key( (string) $_GET['lang'] );
+        if ( in_array( $slug, $allowed, true ) ) {
+            if ( ! headers_sent() ) {
+                setcookie(
+                    'halal_lang',
+                    $slug,
+                    [ 'expires' => time() + 30 * DAY_IN_SECONDS, 'path' => COOKIEPATH, 'domain' => COOKIE_DOMAIN, 'samesite' => 'Lax' ]
+                );
+            }
+            $_COOKIE['halal_lang'] = $slug;
+            $cached = $slug;
+            return $cached;
+        }
+    }
+
+    // 2. Cookie set by a previous switch
+    if ( ! empty( $_COOKIE['halal_lang'] ) ) {
+        $slug = sanitize_key( (string) $_COOKIE['halal_lang'] );
+        if ( in_array( $slug, $allowed, true ) ) {
+            $cached = $slug;
+           return $cached;
+        }
+    }
+
+    // 3. Browser Accept-Language header (best-effort, first match wins)
+    if ( ! empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) {
+        $accept = strtolower( (string) $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
+        foreach ( $allowed as $code ) {
+            if ( $code === 'ja' ) continue; // 'ja' is default; skip unless explicit
+            if ( strpos( $accept, $code ) !== false ) {
+                $cached = $code;
+                return $cached;
+            }
+        }
+    }
+
+    // 4. Default: Japanese
+    $cached = 'ja';
+    return $cached;
+}
