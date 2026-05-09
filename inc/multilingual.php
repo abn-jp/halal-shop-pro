@@ -89,7 +89,7 @@ function halal_mod( string $key, string $default = '' ): string {
             'announcement_text' => [
                 'en' => 'ð Free Shipping on orders over Â¥5,000 | Halal Certified Products',
                 'id' => 'ð Gratis Ongkir untuk pembelian di atas Â¥5,000 | Produk Bersertifikat Halal',
-                'ar' => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨Ø§Øª Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000 | ÙÙØªØ¬Ø§Øª ÙØ¸ØªÙØ¯Ø© Ø­ÙØ§Ù',
+                'ar' => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨Ø§Øª Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000 | ÙÙØªØ¬Ø§Øª ÙØ¹ØªÙØ¯Ø© Ø­ÙØ§Ù',
                 'ms' => 'ð Penghantaran Percuma untuk pembelian melebihi Â¥5,000 | Produk Bersijil Halal',
             ],
             'footer_about_text' => [
@@ -174,11 +174,11 @@ function halal_pll_register_strings(): void {
         'tax_note'              => 'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax',
         'shipping_notice'       => 'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa',
         'customer_reviews'      => 'ãå®¢æ§ã®å£° / Customer Reviews',
-        'read_all_reviews'      => 'ãã¹ã¦ã®ã¬ãã%ã¼ãè¦ã / Read All Reviews',
+        'read_all_reviews'      => 'ãã¹ã¦ã®ã¬ãã¥ã¼ãè¦ã / Read All Reviews',
         'added_to_cart'         => 'ã«ã¼ãã«è¿½å ãã¾ãã / Added to cart!',
         'view_cart'             => 'ã«ã¼ããè¦ã / View Cart',
-        'out_of_stock'          => 'å¨åº«åã / Out of Stock',
-        'subscribe_thanks'      => 'ãç»é²ãããã¨ããããã¾ã / Thank you for subscribing!',
+        'out_of_stock'          => 'å¨åº«åã / Out of Stock',
+        'subscribe_thanks'      => 'ãç»é²ãããã¨ããããã¾ã / Thank you for subscribing!',
         'halal_info_title'      => 'ãã©ã¼ã«ã¨ã¯ï¼ / What is Halal?',
         'hero_cta_cert'         => 'Halalèªè¨¼ã¨ã¯ï¼',
         'newsletter_title'      => 'ãã¥ã¼ã¹ã¬ã¿ã¼ç»é² / Subscribe to Newsletter',
@@ -206,7 +206,7 @@ function halal_normalize_url( string $url ): string {
 
     if ( $railway_host ) {
         // Force HTTPS on Railway
-        $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
+     2  $url = preg_replace( '#^https?://(localhost|127\.0\.0\.1)(:\d+)?(/[^?]*)?#', 'https://' . rtrim( $railway_host, '/' ) . '$3', $url );
     }
 
     // If behind a reverse proxy (Railway / Cloudflare) and arriving via HTTPS,
@@ -242,7 +242,7 @@ function halal_woocommerce_multilingual_init(): void {
 
     // ââ A. Shop page: load translated version ââââââââââââââââââââââââââââââââ
     // Polylang handles this automatically via pll_get_post(), but we ensure
-    // WooCommerce page IDs resolve to the translated page for the active language.
+    // WooCommerce page IDs resolve to the translated page for active language.
     add_filter( 'woocommerce_get_page_id', 'halal_translate_wc_page_id', 10, 2 );
 
     // ââ B. Cart/checkout fragments: include language in AJAX key âââââââââââââ
@@ -456,7 +456,7 @@ function halal_inline_translations( string $translation, string $text, string $d
 
 /**
  * Translation map: source (Japanese/mixed) â target language.
- * Add or expand entries here for fach new string in the theme.
+ * Add or expand entries here for aach new string in the theme.
  */
 function halal_get_translation_map(): array {
     return [
@@ -464,8 +464,8 @@ function halal_get_translation_map(): array {
         // ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
         'en' => [
             // Hero
-            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                  => 'Halal Certified â',
-            'ååãè¦ã / Shop Now'                                               => 'Shop Now',
+            'ãã©ã¼ã«èªè¨¼åå¾ | Halal Certified'                                   => 'Halal Certified â',
+            'ååãè¦ã  / Shop Now'                                                => 'Shop Now',
             'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'What is Halal?',
             'ãã©ã¼ã«åå'                                                         => 'Halal Products',
             'é¡§å®¢æ°'                                                              => 'Customers',
@@ -510,7 +510,7 @@ function halal_get_translation_map(): array {
             // WooCommerce
             'Home'                                                                => 'Home',
             'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'Includes 10% Japanese Consumption Tax',
-            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð Nationwide delivery (Yamato / Sagawa)',
+            'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð Nationwide delivery (Yamato / Sagawa)',
             'Added to cart!'                                                      => 'Added to cart!',
             'Out of Stock'                                                        => 'Out of Stock',
             'Thank you for subscribing!'                                          => 'Thank you for subscribing!',
@@ -572,7 +572,7 @@ function halal_get_translation_map(): array {
             'ååãè¦ã / Shop Now'                                               => 'ØªØ³ÙÙ Ø§ÙØ¢Ù',
             'Halalèªè¨¼ã¨ã¯ï¼'                                                     => 'ÙØ§ ÙÙ Ø§ÙØ­ÙØ§ÙØ',
             'ãã©ã¼ã«åå'                                                         => 'ÙÙØªØ¬Ø§Øª Ø­ÙØ§Ù',
-            'é¡§å®¢æ°'                                                              => 'Ø§ÙØ¹ÙÙØ§Ø¡',
+            'é¡§å®¢æ°'                                                              => 'Ø§ÙØ¹ÙÙØ§Ø¡',
             'å¯¾å¿è¨èª'                                                            => 'Ø§ÙÙØºØ§Øª',
             'ééå¯¾å¿'                                                            => 'Ø§ÙØªÙØµÙÙ',
             'ç¿æ¥'                                                                => 'Ø§ÙÙÙÙ Ø§ÙØªØ§ÙÙ',
@@ -585,14 +585,14 @@ function halal_get_translation_map(): array {
             'View Cart'                                                           => 'Ø¹Ø±Ø¶ Ø§ÙØ³ÙØ©',
             'Checkout'                                                            => 'Ø§ÙØ¯ÙØ¹',
             'Your cart is empty.'                                                 => 'Ø³ÙØªÙ ÙØ§Ø±ØºØ©.',
-            'Total'                                                               => 'Ø§ÙØ¥Ø¬ÙØ§ÙÙ',
-            'My Account'                                                          => 'Ø­Ø³Ø§Ø¨Ù',
+            'Total'                                                               => 'Ø§ÙØ¥Ø¬ÙØ§Ù',
+            'My Account'                                                          => 'Ø­Ø³Ø§Ø¨',
             'Account'                                                             => 'Ø§ÙØ­Ø³Ø§Ø¨',
-            'Login'                                                               => 'ØªØ³Ø¬ÙÙ Ø§ÙØ¯Ø®ÙÙ',
+            'Login'                                                               => 'ØªØ³Ø¬ÙÙ Ø§ÙØ¯Ø®ÙÙ',
             'Cart'                                                                => 'Ø§ÙØ³ÙØ©',
 
             // Announcement
-            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨Ø§Øª Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000',
+            'ð å¨å½éæç¡æ Â¥5,000ä»¥ä¸ | Free Shipping on orders over Â¥5,000'   => 'ð Ø´Ø­Ù ÙØ¬Ø§ÙÙ ÙÙØ·ÙØ¨at Ø§ÙØªÙ ØªØªØ¬Ø§ÙØ² Â¥5,000',
 
             // Testimonials
             'ãå®¢æ§ã®å£° / Customer Reviews'                                       => 'Ø¢Ø±Ø§Ø¡ Ø§ÙØ¹ÙÙØ§Ø¡',
@@ -604,7 +604,7 @@ function halal_get_translation_map(): array {
             'â» æ¶è²»ç¨10%ãå«ã¿ã¾ã / Includes 10% Japanese Consumption Tax'       => 'ÙØ´ÙÙ Ø¶Ø±ÙØ¨Ø© Ø§ÙØ§Ø³ØªÙÙØ§Ù Ø§ÙÙØ§Ø¨Ø§ÙÙØ© 10%',
             'ð å¨å½ééå¯¾å¿ï¼ã¤ããéè¼¸ã»ä½å·æ¥ä¾¿ï¼ | Nationwide delivery via Yamato & Sagawa' => 'ð ØªÙØµÙÙ ÙÙ Ø¬ÙÙØ¹ Ø£ÙØ­Ø§Ø¡ Ø§ÙÙØ§Ø¨Ø§Ù (Yamato / Sagawa)',
             'Added to cart!'                                                      => 'ØªÙØª Ø§ÙØ¥Ø¶Ø§ÙØ© Ø¥ÙÙ Ø§ÙØ³ÙØ©!',
-            'Out of Stock'                                                          => 'ÙÙØ°  Ø§ÙÙØ®Ø²ÙÙ',
+            'Out of Stock'                                                        => 'ÙÙØ° Ø§ÙÙØ®Ø²ÙÙ',
             'Thank you for subscribing!'                                          => 'Ø´ÙØ±Ø§Ù Ø¹ÙÙ Ø§Ø´ØªØ±Ø§ÙÙ!',
         ],
 
@@ -698,7 +698,7 @@ function halal_shop_get_fallback_lang(): string {
         $slug = sanitize_key( (string) $_COOKIE['halal_lang'] );
         if ( in_array( $slug, $allowed, true ) ) {
             $cached = $slug;
-           return $cached;
+            return $cached;
         }
     }
 
