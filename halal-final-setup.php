@@ -47,8 +47,11 @@ $wp_root = '';
 $possible_roots = [
     __DIR__,
     dirname(__DIR__),
-    'C:/laragon/www/halalshop',
     dirname(__DIR__, 2),
+    dirname(__DIR__, 3),   // theme → themes → wp-content → WP root (Railway)
+    dirname(__DIR__, 4),
+    '/var/www/html',        // Railway Docker WP root
+    'C:/laragon/www/halalshop',
 ];
 foreach ($possible_roots as $dir) {
     if (file_exists($dir . '/wp-load.php') && file_exists($dir . '/wp-config.php')) {
