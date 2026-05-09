@@ -10,18 +10,27 @@ LABEL description="Halal Shop Pro — WordPress WooCommerce Theme"
 COPY . /var/www/html/wp-content/themes/halal-shop-pro/
 
 # Install must-use plugin for Railway URL fix & cache bypass
-# (the file lives inside the theme repo; we copy it to mu-plugins/)
 RUN mkdir -p /var/www/html/wp-content/mu-plugins \
     && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \
           /var/www/html/wp-content/mu-plugins/halal-lang-fix.php
+
+# Download and bundle WooCommerce plugin into the image
+# (bundling here ensures it survives Railway redeploys)
+RUN mkdir -p /var/www/html/wp-content/plugins \
+    && curl -sL https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \
+         -o /tmp/woocommerce.zip \
+    && unzip -q /tmp/woocommerce.zip -d /var/www/html/wp-content/plugins/ \
+    && rm /tmp/woocommerce.zip
 
 # Set correct ownership and permissions
 RUN chown -R www-data:www-data \
         /var/www/html/wp-content/themes/halal-shop-pro \
         /var/www/html/wp-content/mu-plugins \
+        /var/www/html/wp-content/plugins/woocommerce \
     && chmod -R 755 \
         /var/www/html/wp-content/themes/halal-shop-pro \
-        /var/www/html/wp-content/mu-plugins
+        /var/www/html/wp-content/mu-plugins \
+        /var/www/html/wp-content/plugins/woocommerce
 
 # Enable rewrite (prefork already active in base image)
 RUN a2enmod rewrite
