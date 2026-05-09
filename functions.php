@@ -18,8 +18,12 @@ require_once HALAL_SHOP_DIR . '/inc/halal-meta.php';
 
 if ( class_exists( 'WooCommerce' ) ) {
     require_once HALAL_SHOP_DIR . '/inc/woocommerce.php';
-    require_once HALAL_SHOP_DIR . '/inc/halal-wagyu.php';
-    require_once HALAL_SHOP_DIR . '/inc/wagyu-sample-data.php';
+    if ( file_exists( HALAL_SHOP_DIR . '/inc/halal-wagyu.php' ) ) {
+        require_once HALAL_SHOP_DIR . '/inc/halal-wagyu.php';
+    }
+    if ( file_exists( HALAL_SHOP_DIR . '/inc/wagyu-sample-data.php' ) ) {
+        require_once HALAL_SHOP_DIR . '/inc/wagyu-sample-data.php';
+    }
 }
 
 /**
