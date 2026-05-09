@@ -1,10 +1,10 @@
-# Halal Shop Pro â WordPress on Railway
+# Halal Shop Pro — WordPress on Railway
 # Extends the official WordPress image and pre-installs our theme
 
 FROM wordpress:6.5-php8.2-apache
 
 LABEL maintainer="abn-jp"
-LABEL description="Halal Shop Pro â WordPress WooCommerce Theme"
+LABEL description="Halal Shop Pro — WordPress WooCommerce Theme"
 
 # Copy theme into WordPress themes directory
 COPY . /var/www/html/wp-content/themes/halal-shop-pro/
@@ -14,13 +14,6 @@ COPY . /var/www/html/wp-content/themes/halal-shop-pro/
 RUN mkdir -p /var/www/html/wp-content/mu-plugins \
     && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \
           /var/www/html/wp-content/mu-plugins/halal-lang-fix.php
-
-# Pre-install Polylang plugin (activation handled at runtime by mu-plugin)
-RUN mkdir -p /var/www/html/wp-content/plugins \
-    && curl -sL https://downloads.wordpress.org/plugin/polylang.latest-stable.zip \
-            -o /tmp/polylang.zip \
-    && unzip -q /tmp/polylang.zip -d /var/www/html/wp-content/plugins/ \
-    && rm /tmp/polylang.zip
 
 # Set correct ownership and permissions
 RUN chown -R www-data:www-data \
