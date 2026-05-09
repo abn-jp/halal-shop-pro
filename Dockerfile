@@ -1,7 +1,7 @@
 # Halal Shop Pro — WordPress on Railway
 # Extends the official WordPress image and pre-installs our theme
 
-FROM wordpress:6.5-php8.2-apache
+FROM wordpress:php8.2-apache
 
 LABEL maintainer="abn-jp"
 LABEL description="Halal Shop Pro — WordPress WooCommerce Theme"
