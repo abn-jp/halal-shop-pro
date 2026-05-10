@@ -21,6 +21,29 @@ add_filter( 'script_loader_src',        'halal_fix_railway_content_url', 1 );
 add_filter( 'template_directory_uri',   'halal_fix_railway_content_url', 1 );
 add_filter( 'stylesheet_directory_uri', 'halal_fix_railway_content_url', 1 );
 add_filter( 'plugins_url',              'halal_fix_railway_content_url', 1 );
+// Fix product image URLs (WooCommerce attachment / upload URLs)
+add_filter( 'wp_get_attachment_url',    'halal_fix_railway_content_url', 1 );
+add_filter( 'wp_get_attachment_image_src', function( $image ) {
+    if ( is_array( $image ) && isset( $image[0] ) ) {
+        $image[0] = halal_fix_railway_content_url( $image[0] );
+    }
+    return $image;
+}, 1 );
+add_filter( 'wp_calculate_image_srcset', function( $sources ) {
+    if ( is_array( $sources ) ) {
+        foreach ( $sources as &$source ) {
+            if ( isset( $source['url'] ) ) {
+                $source['url'] = halal_fix_railway_content_url( $source['url'] );
+            }
+        }
+    }
+    return $sources;
+}, 1 );
+add_filter( 'upload_dir', function( $uploads ) {
+    if ( isset( $uploads['url'] ) )     $uploads['url']     = halal_fix_railway_content_url( $uploads['url'] );
+    if ( isset( $uploads['baseurl'] ) ) $uploads['baseurl'] = halal_fix_railway_content_url( $uploads['baseurl'] );
+    return $uploads;
+}, 1 );
 
 function halal_fix_railway_content_url( $url ) {
     if ( ! is_string( $url ) || $url === '' ) return $url;
@@ -39,9 +62,6 @@ function halal_fix_railway_content_url( $url ) {
 }
 
 // ─── 1. HTTPS / Reverse-Proxy Fix (Railway, Cloudflare) ──────────────────────
-// Railway terminates SSL at its edge; WordPress sees plain HTTP inside the
-// container. Without this, is_ssl() returns false and siteurl stays http://,
-// causing redirect loops and mixed-content warnings.
 
 if (
     isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
@@ -50,7 +70,6 @@ if (
     $_SERVER['HTTPS'] = 'on';
 }
 
-// Also trust Cloudflare's CF-Visitor header
 if (
     isset( $_SERVER['HTTP_CF_VISITOR'] ) &&
     strpos( $_SERVER['HTTP_CF_VISITOR'], '"https"' ) !== false
@@ -59,16 +78,11 @@ if (
 }
 
 // ─── 2. RAILWAY DOMAIN AUTO-DETECTION ─────────────────────────────────────────
-// When RAILWAY_PUBLIC_DOMAIN is set, override WordPress siteurl/home so all
-// URLs are correct even if the DB has stale values.
-//
-// Skip auto-generated Railway internal service hostnames
-// (pattern: <service>-production-<hash>.up.railway.app)
 
 $_halal_railway_domain = getenv( 'RAILWAY_PUBLIC_DOMAIN' ) ?: getenv( 'RAILWAY_STATIC_URL' ) ?: '';
 
 if ( $_halal_railway_domain && preg_match( '/^[a-z0-9-]+-production-[a-f0-9]+\.up\.railway\.app$/i', $_halal_railway_domain ) ) {
-    $_halal_railway_domain = ''; // treat as not set — DB values are correct
+    $_halal_railway_domain = '';
 }
 
 if ( $_halal_railway_domain ) {
@@ -91,7 +105,6 @@ if ( $_halal_railway_domain ) {
 add_action( 'init', function() {
     if ( ! function_exists( 'PLL' ) ) return;
     if ( method_exists( PLL()->links_model ?? new stdClass(), 'get_home_url' ) ) {
-        // PLL links model rebuilds on next call — no explicit flush needed
     }
 }, 1 );
 
@@ -115,7 +128,7 @@ if ( $_halal_has_lang_signal ) {
     } );
 }
 
-// ─── 5. COOKIE DOMAIN FOR BOTH LOCALHOST & RAILWAY ────────────────────────────
+// ─── 5. COOKIE DOMAIN ────────────────────────────────────────────────────────
 
 if ( ! defined( 'COOKIE_DOMAIN' ) ) {
     $host = $_SERVER['HTTP_HOST'] ?? '';
@@ -161,8 +174,3 @@ add_action( 'init', function() {
         unset( $_GET['lang'] );
     }
 }, 1 );
-
-// ─── 9. POLYLANG — disabled (cookie-based fallback handles multilingual) ─────
-// Polylang is not auto-installed; the theme's halal_mod() inline translations
-// and cookie/URL language switcher in functions.php handle all 5 languages.
-// To enable Polylang: install it via WP Admin → Plugins and configure languages.
