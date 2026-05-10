@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Halal Shop — Language Fix (Must-Use)
  * Description: Forces correct URLs on Railway, disables cache during language switch, fixes HTTPS/proxy issues. Loaded before all other plugins.
- * Version: 1.0.2
+ * Version: 1.0.3
  *
  * INSTALLATION: copy this file to wp-content/mu-plugins/halal-lang-fix.php
  * The setup-multilingual.sh script does this automatically.
@@ -11,17 +11,12 @@
 defined( 'ABSPATH' ) || exit;
 
 // ─── 0. FIX WP_CONTENT_URL (Railway internal hostname) ───────────────────────
-// Railway's WordPress Docker image defines WP_CONTENT_URL as a PHP constant
-// pointing to the internal service hostname (e.g. mysql-production-30ed.up.railway.app).
-// Since constants cannot be redefined after they're set (wp-config runs first),
-// we filter every enqueued CSS/JS URL and the theme directory URI at runtime.
 
 add_filter( 'style_loader_src',         'halal_fix_railway_content_url', 1 );
 add_filter( 'script_loader_src',        'halal_fix_railway_content_url', 1 );
 add_filter( 'template_directory_uri',   'halal_fix_railway_content_url', 1 );
 add_filter( 'stylesheet_directory_uri', 'halal_fix_railway_content_url', 1 );
 add_filter( 'plugins_url',              'halal_fix_railway_content_url', 1 );
-// Fix product image URLs (WooCommerce attachment / upload URLs)
 add_filter( 'wp_get_attachment_url',    'halal_fix_railway_content_url', 1 );
 add_filter( 'wp_get_attachment_image_src', function( $image ) {
     if ( is_array( $image ) && isset( $image[0] ) ) {
@@ -52,8 +47,6 @@ function halal_fix_railway_content_url( $url ) {
         $host = $_SERVER['HTTP_HOST'] ?? '';
     }
     if ( ! $host ) return $url;
-    // Replace any Railway internal auto-generated hostname (pattern: name-production-HASH.up.railway.app)
-    // with the actual public HTTP_HOST so all asset URLs resolve correctly.
     return preg_replace(
         '#^(https?://)[a-z0-9-]+-production-[a-f0-9]+\.up\.railway\.app#i',
         'https://' . $host,
@@ -61,51 +54,35 @@ function halal_fix_railway_content_url( $url ) {
     );
 }
 
-// ─── 1. HTTPS / Reverse-Proxy Fix (Railway, Cloudflare) ──────────────────────
+// ─── 1. HTTPS / Reverse-Proxy Fix ────────────────────────────────────────────
 
-if (
-    isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
-    strtolower( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) === 'https'
-) {
+if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strtolower( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) === 'https' ) {
+    $_SERVER['HTTPS'] = 'on';
+}
+if ( isset( $_SERVER['HTTP_CF_VISITOR'] ) && strpos( $_SERVER['HTTP_CF_VISITOR'], '"https"' ) !== false ) {
     $_SERVER['HTTPS'] = 'on';
 }
 
-if (
-    isset( $_SERVER['HTTP_CF_VISITOR'] ) &&
-    strpos( $_SERVER['HTTP_CF_VISITOR'], '"https"' ) !== false
-) {
-    $_SERVER['HTTPS'] = 'on';
-}
-
-// ─── 2. RAILWAY DOMAIN AUTO-DETECTION ─────────────────────────────────────────
+// ─── 2. RAILWAY DOMAIN AUTO-DETECTION ────────────────────────────────────────
 
 $_halal_railway_domain = getenv( 'RAILWAY_PUBLIC_DOMAIN' ) ?: getenv( 'RAILWAY_STATIC_URL' ) ?: '';
-
 if ( $_halal_railway_domain && preg_match( '/^[a-z0-9-]+-production-[a-f0-9]+\.up\.railway\.app$/i', $_halal_railway_domain ) ) {
     $_halal_railway_domain = '';
 }
-
 if ( $_halal_railway_domain ) {
     $_halal_railway_url = 'https://' . rtrim( $_halal_railway_domain, '/' );
-
-    add_filter( 'pre_option_siteurl', function() use ( $_halal_railway_url ) {
-        return $_halal_railway_url;
-    }, 1 );
-    add_filter( 'pre_option_home', function() use ( $_halal_railway_url ) {
-        return $_halal_railway_url;
-    }, 1 );
-
+    add_filter( 'pre_option_siteurl', function() use ( $_halal_railway_url ) { return $_halal_railway_url; }, 1 );
+    add_filter( 'pre_option_home',    function() use ( $_halal_railway_url ) { return $_halal_railway_url; }, 1 );
     add_filter( 'woocommerce_get_shop_url', function( $url ) use ( $_halal_railway_url ) {
         return str_replace( home_url(), $_halal_railway_url, $url );
     } );
 }
 
-// ─── 3. POLYLANG — FORCE CORRECT HOME URL PER LANGUAGE ────────────────────────
+// ─── 3. POLYLANG ──────────────────────────────────────────────────────────────
 
 add_action( 'init', function() {
     if ( ! function_exists( 'PLL' ) ) return;
-    if ( method_exists( PLL()->links_model ?? new stdClass(), 'get_home_url' ) ) {
-    }
+    if ( method_exists( PLL()->links_model ?? new stdClass(), 'get_home_url' ) ) {}
 }, 1 );
 
 // ─── 4. DISABLE PAGE CACHE DURING LANGUAGE SWITCH ────────────────────────────
@@ -145,17 +122,15 @@ add_action( 'template_redirect', function() {
     if ( $lang && function_exists( 'pll_home_url' ) ) {
         $home = pll_home_url( $lang );
         if ( $home && $home !== ( ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) ) {
-            wp_redirect( $home, 302 );
-            exit;
+            wp_redirect( $home, 302 ); exit;
         }
     }
 }, 5 );
 
-// ─── 7. WOOCOMMERCE: FLUSH CART WHEN LANGUAGE CHANGES ────────────────────────
+// ─── 7. WOOCOMMERCE: FLUSH CART ON LANGUAGE CHANGE ───────────────────────────
 
 add_action( 'wp_loaded', function() {
-    if ( ! class_exists( 'WooCommerce' ) ) return;
-    if ( ! function_exists( 'WC' ) ) return;
+    if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) ) return;
     $new_lang  = sanitize_key( $_GET['lang'] ?? '' );
     $prev_lang = sanitize_key( $_COOKIE['halal_lang'] ?? '' );
     if ( $new_lang && $prev_lang && $new_lang !== $prev_lang ) {
@@ -170,7 +145,19 @@ add_action( 'wp_loaded', function() {
 add_action( 'init', function() {
     if ( ! isset( $_GET['lang'] ) ) return;
     $allowed = [ 'ja', 'en', 'id', 'ar', 'ms' ];
-    if ( ! in_array( $_GET['lang'], $allowed, true ) ) {
-        unset( $_GET['lang'] );
-    }
+    if ( ! in_array( $_GET['lang'], $allowed, true ) ) unset( $_GET['lang'] );
 }, 1 );
+
+// ─── 9. WOOCOMMERCE: FIX MISSING PLACEHOLDER IMAGE ───────────────────────────
+// Docker containers don't persist wp-content/uploads between redeploys, so
+// WooCommerce's uploads/woocommerce-placeholder.webp gets wiped. Fall back to
+// the built-in placeholder inside the WooCommerce plugin directory instead.
+
+add_filter( 'woocommerce_placeholder_img_src', function( $src ) {
+    if ( strpos( $src, '/uploads/woocommerce-placeholder' ) !== false ) {
+        if ( function_exists( 'WC' ) ) {
+            return WC()->plugin_url() . '/assets/images/placeholder.png';
+        }
+    }
+    return $src;
+}, 10 );
