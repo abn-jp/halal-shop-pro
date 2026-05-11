@@ -10,44 +10,35 @@ LABEL description="Halal Shop Pro — WordPress WooCommerce Theme"
 COPY . /var/www/html/wp-content/themes/halal-shop-pro/
 
 # Install must-use plugin for Railway URL fix & cache bypass
-RUN mkdir -p /var/www/html/wp-content/mu-plugins \
-    && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \
+RUN mkdir -p /var/www/html/wp-content/mu-plugins \\
+    && cp /var/www/html/wp-content/themes/halal-shop-pro/mu-plugins/halal-lang-fix.php \\
           /var/www/html/wp-content/mu-plugins/halal-lang-fix.php
 
 # Install unzip (not in base wordpress image) then download & bundle WooCommerce
-RUN apt-get update && apt-get install -y --no-install-recommends unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends unzip \\
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/www/html/wp-content/plugins \
-    && curl -sL https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \
-         -o /tmp/woocommerce.zip \
-    && unzip -q /tmp/woocommerce.zip -d /var/www/html/wp-content/plugins/ \
+RUN mkdir -p /var/www/html/wp-content/plugins \\
+    && curl -sL https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \\
+         -o /tmp/woocommerce.zip \\
+    && unzip -q /tmp/woocommerce.zip -d /var/www/html/wp-content/plugins/ \\
     && rm /tmp/woocommerce.zip
 
-# Create uploads directory and set correct ownership and permissions
-RUN mkdir -p /var/www/html/wp-content/uploads \
-    && chown -R www-data:www-data \
-        /var/www/html/wp-content/themes/halal-shop-pro \
-        /var/www/html/wp-content/mu-plugins \
-        /var/www/html/wp-content/plugins/woocommerce \
-        /var/www/html/wp-content/uploads \
-    && chmod -R 775 \
-        /var/www/html/wp-content/uploads \
-    && chmod -R 755 \
-        /var/www/html/wp-content/themes/halal-shop-pro \
-        /var/www/html/wp-content/mu-plugins \
-        /var/www/html/wp-content/plugins/woocommerce
+# Fix ownership on all wp-content (COPY sets root; Apache runs as www-data)
+RUN chown -R www-data:www-data /var/www/html/wp-content \\
+    && find /var/www/html/wp-content -type d -exec chmod 775 {} \\; \\
+    && find /var/www/html/wp-content -type f -exec chmod 664 {} \\;
 
 # Enable rewrite (prefork already active in base image)
 RUN a2enmod rewrite
 
 # Custom PHP settings for WooCommerce
-RUN echo "upload_max_filesize = 64M\npost_max_size = 64M\nmemory_limit = 512M\nmax_execution_time = 300\nmax_input_vars = 3000" \
+RUN echo "upload_max_filesize = 64M\\npost_max_size = 64M\\nmemory_limit = 512M\\nmax_execution_time = 300\\nmax_input_vars = 3000" \\
     > /usr/local/etc/php/conf.d/wordpress-custom.ini
 
-# Write the MPM-fix wrapper inline so no external file is needed
-RUN printf '#!/bin/bash\nset -e\nfind /etc/apache2/mods-enabled/ -name "mpm_*" -delete 2>/dev/null || true\nln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf\nln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load\nexec docker-entrypoint.sh "$@"\n' \
-    > /usr/local/bin/docker-entrypoint-wrapper.sh \
+# Entrypoint wrapper: fix MPM + ensure uploads dir writable at container start
+RUN printf '#!/bin/bash\\nset -e\\nmkdir -p /var/www/html/wp-content/uploads\\nchown -R www-data:www-data /var/www/html/wp-content/uploads\\nchmod -R 775 /var/www/html/wp-content/uploads\\nfind /etc/apache2/mods-enabled/ -name "mpm_*" -delete 2>/dev/null || true\\nln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf\\nln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load\\nexec docker-entrypoint.sh "\$@"\\n' \\
+    > /usr/local/bin/docker-entrypoint-wrapper.sh \\
     && chmod +x /usr/local/bin/docker-entrypoint-wrapper.sh
 
 EXPOSE 80
