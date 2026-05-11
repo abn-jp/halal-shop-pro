@@ -161,3 +161,22 @@ add_filter( 'woocommerce_placeholder_img_src', function( $src ) {
     }
     return $src;
 }, 10 );
+
+// ─── 11. AUTO-CREATE UPLOADS DIRECTORY (Railway ephemeral filesystem) ─────────
+// Railway containers reset wp-content/uploads on each deploy. This ensures the
+// directory tree exists with correct ownership on every request so media uploads
+// and WooCommerce product images work immediately after a redeploy.
+
+add_action( 'init', function() {
+    $upload     = wp_upload_dir( null, true ); // force path recalc
+    $dirs_needed = [
+        $upload['basedir'],               // wp-content/uploads
+        $upload['path'],                  // wp-content/uploads/YYYY/MM
+        $upload['basedir'] . '/woocommerce_uploads',
+    ];
+    foreach ( $dirs_needed as $dir ) {
+        if ( $dir && ! is_dir( $dir ) ) {
+            wp_mkdir_p( $dir );
+        }
+    }
+}, 1 );
