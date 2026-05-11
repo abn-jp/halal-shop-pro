@@ -1,9 +1,10 @@
 /* ============================================
-   HALAL SHOP PRO — MAIN STYLESHEET v1.1.0
+   HALAL SHOP PRO — MAIN STYLESHEET v1.1.1
    ============================================ */
 
 /* ─── 0. BODY RESET (overrides WP die-handler inline style) ─── */
-html,body{max-width:100%!important;margin:0!important;padding:0!important;background:#f8f9fa!important;border:none!important;box-shadow:none!important}
+html,body{max-width:100%!important;margin:0!important;padding:0!important;background:#f8f9fa!important;border:none!important;box-shadow:none!important;color:var(--color-text,#1a1a1a)!important;overflow-x:hidden!important}
+#page.site{overflow-x:hidden}
 
 /* ─── 1. CSS CUSTOM PROPERTIES ─────────────── */
 :root {
