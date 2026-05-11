@@ -24,11 +24,15 @@ RUN mkdir -p /var/www/html/wp-content/plugins \
     && unzip -q /tmp/woocommerce.zip -d /var/www/html/wp-content/plugins/ \
     && rm /tmp/woocommerce.zip
 
-# Set correct ownership and permissions
-RUN chown -R www-data:www-data \
+# Create uploads directory and set correct ownership and permissions
+RUN mkdir -p /var/www/html/wp-content/uploads \
+    && chown -R www-data:www-data \
         /var/www/html/wp-content/themes/halal-shop-pro \
         /var/www/html/wp-content/mu-plugins \
         /var/www/html/wp-content/plugins/woocommerce \
+        /var/www/html/wp-content/uploads \
+    && chmod -R 775 \
+        /var/www/html/wp-content/uploads \
     && chmod -R 755 \
         /var/www/html/wp-content/themes/halal-shop-pro \
         /var/www/html/wp-content/mu-plugins \
