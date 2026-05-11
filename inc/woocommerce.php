@@ -6,6 +6,10 @@
 // Remove default WooCommerce styles (we use our own)
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 
+// Remove default WooCommerce page wrappers — theme handles its own layout in archive-product.php
+remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
+remove_action( 'woocommerce_after_main_content',  'woocommerce_output_content_wrapper_end', 10 );
+
 // Remove sidebar from shop
 remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 );
 
@@ -36,12 +40,7 @@ add_filter( 'woocommerce_breadcrumb_defaults', function( $defaults ) {
 
 // Checkout fields customization
 add_filter( 'woocommerce_checkout_fields', function( $fields ) {
-    // Add company name prominence
     $fields['billing']['billing_company']['priority'] = 25;
-
-    // Remove unneeded fields for Japanese market
-    // (keep all for international compatibility)
-
     return $fields;
 } );
 
@@ -118,14 +117,11 @@ add_filter( 'wc_add_to_cart_message_html', function( $message, $products ) {
 
 // Japanese tax settings helper (run once via setup)
 function halal_shop_configure_tax_settings() {
-    // Only run if explicitly triggered
     update_option( 'woocommerce_calc_taxes', 'yes' );
-    update_option( 'woocommerce_tax_display_shop', 'incl' );   // Show prices incl. tax in shop
+    update_option( 'woocommerce_tax_display_shop', 'incl' );
     update_option( 'woocommerce_tax_display_cart', 'incl' );
     update_option( 'woocommerce_tax_total_display', 'single' );
 }
-// Uncomment to auto-configure on theme activation:
-// add_action( 'after_switch_theme', 'halal_shop_configure_tax_settings' );
 
 // Display related products limit
 add_filter( 'woocommerce_output_related_products_args', function( $args ) {
